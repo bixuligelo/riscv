@@ -7,7 +7,6 @@ module alu(
 	output reg[31:0] alu_result
 );
 
-reg[31:0] result;
 
 always @(*)
 begin
@@ -35,7 +34,7 @@ end
 
 
 
-always
+always @(*)
 begin
 	if(alu_result) zero<=0;
 	else zero<=1;
