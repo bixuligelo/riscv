@@ -18,10 +18,10 @@ module riscv(      //这个是cpu的顶层模块，时钟clk、复位键reset、
 
 reg [31:0] pc;
 reg [31:0] registers [0:31]; ///通用寄存器
+reg [7:0] temp;
 
 initial
-begin:init_reg
-	reg [7:0] temp;
+begin
 	pc<=0;
 	for(temp=0;temp<32;temp=temp+1)
 		registers[temp]<=0;
@@ -41,7 +41,7 @@ wire memtoreg;
 wire memread;
 wire branch;
 
-decoder decoder(.instruction(instruction),
+decoder decoder1(.instruction(instruction),
 					.alu_ctr(alu_ctr),
 					.alusrc(alusrc),
 					.memwrite(memwrite),
@@ -51,7 +51,7 @@ decoder decoder(.instruction(instruction),
 					.branch(branch)
 					);
 				
-alu alu(.data1(registers[instruction[19:15]]),
+alu alu1(.data1(registers[instruction[19:15]]),
 			.data2(alusrc ? instruction[31:20] : registers[instruction[24:20]]),//alusrc=1为addi,alusrc=0为add
 			.alu_ctr(alu_ctr),
 			.zero(zero),
@@ -66,7 +66,7 @@ assign dram_write=memwrite;
 assign dram_read=memread;
 
 
-always
+always@(posedge clk) 
 begin
 	if(regwrite) begin
 		registers[instruction[11:7]]<=memtoreg?dram_data_in:alu_result;
