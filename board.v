@@ -6,6 +6,9 @@ reg reset;
 
 initial 
 begin
+	$dumpfile("wave.vcd");        //生成的vcd文件名称
+  $dumpvars(0, board);    //tb模块名称
+
 	reset<=1'b0;
 	#100 $stop;
 end
